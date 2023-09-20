@@ -1,0 +1,43 @@
+Dựa trên các mã nguồn bạn đã gửi, dưới đây là các bước cơ bản để xây dựng một ứng dụng Spring Security sử dụng JWT (JSON Web Token) để xác thực người dùng và quản lý phân quyền:
+
+**Bước 1: Tạo Entity cho người dùng và vai trò**
+
+- Định nghĩa Entity cho người dùng (`Users`) và vai trò (`Role`) trong ứng dụng của bạn.
+
+**Bước 2: Tạo DTO cho đăng nhập và đăng ký**
+
+- Tạo DTO (Data Transfer Object) cho đăng nhập (`FormSignInDto`) và đăng ký (`FormSignUpDto`) để xử lý dữ liệu từ giao diện người dùng.
+
+**Bước 3: Triển khai UserDetailsService**
+
+- Triển khai `UserDetailsService` để tìm kiếm người dùng theo tên đăng nhập và chuyển đổi thông tin người dùng thành đối tượng `UserDetails`.
+
+**Bước 4: Triển khai UserPrinciple**
+
+- Triển khai lớp `UserPrinciple` là một lớp cụ thể của `UserDetails`. Lớp này chứa thông tin chi tiết của người dùng và danh sách các quyền (Granted Authorities).
+
+**Bước 5: Tạo JWT Provider**
+
+- Tạo một `JwtProvider` để tạo và xác thực mã token JWT. Đảm bảo rằng bạn đã cấu hình `SECRET` và thời gian hết hạn (`EXPIRED`) cho token.
+
+**Bước 6: Triển khai JwtTokenFilter**
+
+- Triển khai `JwtTokenFilter` để kiểm tra và xác thực mã token JWT từ tiêu đề "Authorization" của request. Nếu token hợp lệ, nó sẽ trích xuất thông tin người dùng và đặt nó vào `SecurityContextHolder` để xác thực.
+
+**Bước 7: Cấu hình Spring Security** WebSecurityConfig, sau khi xây dựng JwtEntryPoint để xử lý các tình huống khi một yêu cầu không hợp lệ được gửi từ một người dùng chưa xác thực.
+
+- Cấu hình Spring Security để sử dụng `JwtTokenFilter` và xác định quyền truy cập cho các tài nguyên và API của ứng dụng.
+
+**Bước 8: Triển khai API Đăng nhập và Đăng ký**
+
+- Triển khai các API cho đăng nhập (`/api/v4/auth/sign-in`) và đăng ký (`/api/v4/auth/sign-up`). Trong API đăng nhập, bạn sẽ sử dụng `AuthenticationManager` để xác thực người dùng và tạo token JWT.
+
+**Bước 9: Xây dựng API bảo vệ**
+
+- Xây dựng các API cần bảo vệ và đánh dấu chúng bằng `@PreAuthorize` để xác định quyền truy cập.
+
+**Bước 10: Tạo và kiểm tra ứng dụng**
+
+- Cuối cùng, tạo ứng dụng của bạn và kiểm tra các API và quyền truy cập.
+
+Lưu ý rằng các bước này chỉ là hướng dẫn cơ bản và bạn có thể cần điều chỉnh và tùy chỉnh chúng cho ứng dụng cụ thể của bạn. Đảm bảo rằng bạn đã cấu hình các giá trị cần thiết như `SECRET`, `EXPIRED`, và cài đặt các phần mềm phụ thuộc như Spring Security và JWT.
